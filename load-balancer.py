@@ -1,3 +1,4 @@
+#! /home/myke/anaconda3/bin/python3.7
 from sys import exit
 
 input_file_address  = 'input.txt'
@@ -20,7 +21,7 @@ with open(input_file_address, 'r') as input_file:
 			exit(1)
 print('Reading done.')
 
-print('Starting the Simulation')
+print('Starting the Simulation...')
 t = 0
 servers_per_tick = []
 servers = []
@@ -30,9 +31,10 @@ while True:
 	except IndexError:
 		new_users = 0
 	
-	print(f't: {t}')
 	if new_users == 0 and len(servers) == 0:
 		break
+
+	print(f't: {t}')
 
 	# Um tick a menos em cada tarefa
 	servers = [list(map(lambda x: x - 1, server)) for server in servers]
@@ -42,25 +44,26 @@ while True:
 		while 0 in server:
 			server.remove(0)
 
+	# Desalocando servidores ociosos
 	while [] in servers:
 		servers.remove([])
 
 	# Alocando cada usuário novo
 	while new_users > 0:
 		if len(servers) == 0 or all(len(server) == Umax for server in servers):
-			servers.append([4])
+			servers.append([Ttask])
 		else:
 			server_available = list(filter(lambda server: len(server) < Umax, servers))[0]
-			server_available.append(4)
+			server_available.append(Ttask)
 		new_users -= 1
 
-	print(f'Server Status: {servers}')
+	print(f'Servers Status: {servers}')
 	print(*(len(server) for server in servers), sep=',')
 	servers_per_tick.append(servers)
 	t += 1
 print('Simulation done.')
 
-print(f'Saving results into {BOLD}{output_file_address}{END}')
+print(f'Saving results into {BOLD}{output_file_address}{END}...')
 with open(output_file_address, 'w') as output_file:
 	for tick in servers_per_tick:
 		output_file.write(','.join(str(len(server)) for server in tick))
