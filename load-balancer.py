@@ -54,21 +54,15 @@ while True:
 			server_available.append(4)
 		new_users -= 1
 
-	print(servers)
+	print(f'Server Status: {servers}')
 	print(*(len(server) for server in servers), sep=',')
 	servers_per_tick.append(servers)
 	t += 1
-
 print('Simulation done.')
 
-
-
-
-
-
-
-
-exit(0)
 print(f'Saving results into {BOLD}{output_file_address}{END}')
-
+with open(output_file_address, 'w') as output_file:
+	for tick in servers_per_tick:
+		output_file.write(','.join(str(len(server)) for server in tick))
+		output_file.write('\n')
 print('Results Saved.')
